@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Полины 💕</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;600;700&family=Marck+Script&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: 'Comfortaa', cursive;
+            background: linear-gradient(135deg, #ffe0ec 0%, #ffd1e3 30%, #ffc4dc 60%, #ffb8d4 100%);
+            color: #6b2c44;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            position: relative; user-select: none;
+        }
+
+        .falling-words-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 100; overflow: hidden;
+        }
+        .falling-word {
+            position: absolute; top: -60px;
+            font-family: 'Marck Script', cursive; font-size: 2rem;
+            color: #d63384;
+            text-shadow: 0 0 8px rgba(255,255,255,1), 0 0 15px rgba(255,255,255,0.8), 0 0 25px rgba(255,182,193,0.9);
+            opacity: 0; white-space: nowrap;
+            animation: fall linear forwards; font-weight: 600; z-index: 100;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-60px) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; } 85% { opacity: 1; }
+            100% { transform: translateY(105vh) translateX(60px) rotate(18deg); opacity: 0; }
+        }
+
+        .pop-word {
+            position: fixed; font-family: 'Marck Script', cursive; font-size: 1.8rem;
+            color: #ff2d87;
+            text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 25px rgba(255,105,180,0.9), 0 0 40px rgba(255,182,193,0.7);
+            pointer-events: none; z-index: 200; white-space: nowrap;
+            animation: popWord 2.5s ease-out forwards; font-weight: 700;
+        }
+        @keyframes popWord {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(3deg); }
+            35% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            75% { opacity: 1; transform: translate(-50%, -80%) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(-50%, -180%) scale(0.8) rotate(-5deg); }
+        }
+
+        .heart-burst {
+            position: fixed; font-size: 1.8rem; pointer-events: none; z-index: 250;
+            animation: burst 1.6s ease-out forwards;
+        }
+        @keyframes burst {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.3) rotate(0deg); }
+            60% { opacity: 1; }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.3) rotate(var(--rot)); }
+        }
+
+        .bg-heart {
+            position: fixed; font-size: 1.5rem; opacity: 0.2; pointer-events: none; z-index: 1;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.25; } 90% { opacity: 0.25; }
+            to { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .book {
+            position: relative; z-index: 10; width: 100%; max-width: 600px; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; padding: 15px;
+        }
+        .book-header { text-align: center; margin-bottom: 8px; flex-shrink: 0; }
+        .book-header h1 {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+            color: #c2185b; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.9);
+        }
+
+        .pages {
+            position: relative; flex: 1; display: flex;
+            align-items: center; justify-content: center; min-height: 0;
+        }
+        .page {
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 12px;
+            opacity: 0; transform: translateX(60px) scale(0.95);
+            pointer-events: none; transition: opacity 0.55s ease, transform 0.55s ease;
+            padding: 5px; overflow-y: auto;
+        }
+        .page.active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+        .page.exit-left { opacity: 0; transform: translateX(-60px) scale(0.95); }
+        .page.exit-right { opacity: 0; transform: translateX(60px) scale(0.95); }
+
+        .photo-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 26px; padding: 15px 18px 20px;
+            box-shadow: 0 20px 50px rgba(214, 51, 132, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            display: flex; flex-direction: column; align-items: center; gap: 14px;
+            max-width: 100%; max-height: 100%;
+        }
+        .photo-card img {
+            width: 100%; max-height: 36vh; object-fit: cover; border-radius: 18px;
+            box-shadow: 0 10px 28px rgba(214, 51, 132, 0.3); display: block;
+        }
+        .page-title {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+            color: #c2185b; text-align: center; line-height: 1.3;
+            text-shadow: 1px 1px 8px rgba(255, 255, 255, 0.9);
+        }
+        .page-text {
+            font-size: clamp(0.85rem, 2.7vw, 1rem); color: #8a2b50;
+            text-align: center; line-height: 1.6; padding: 0 6px;
+        }
+
+        .warning-page {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 22px; text-align: center; padding: 35px 25px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 28px;
+            box-shadow: 0 20px 55px rgba(214, 51, 132, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            max-width: 460px; border: 2px dashed rgba(214, 51, 132, 0.35);
+        }
+        .warning-emoji { font-size: 3rem; animation: pulse 2s ease-in-out infinite; line-height: 1; }
+        .warning-title {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+            color: #c2185b; line-height: 1.3; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.9);
+        }
+        .warning-text { font-size: clamp(0.9rem, 3vw, 1.05rem); color: #8a2b50; line-height: 1.7; }
+        .warning-hint {
+            font-family: 'Marck Script', cursive; font-size: 1.15rem; color: #d63384;
+            margin-top: 5px; animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        .question-page {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            padding: 30px 24px;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 28px;
+            box-shadow: 0 20px 55px rgba(214, 51, 132, 0.32), 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+            max-width: 480px; width: 100%;
+            border: 2px dashed rgba(214, 51, 132, 0.3);
+        }
+        .question-num {
+            font-family: 'Comfortaa', cursive; font-size: 0.85rem;
+            color: #d63384; letter-spacing: 3px; text-transform: uppercase;
+            opacity: 0.8; font-weight: 600;
+        }
+        .question-title {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+            color: #c2185b; text-align: center; line-height: 1.3;
+            text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.9);
+        }
+        .question-answer {
+            width: 100%; min-height: 90px; padding: 16px 18px;
+            border-radius: 20px;
+            border: 2px solid rgba(214, 51, 132, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Comfortaa', cursive; font-size: 1rem;
+            color: #6b2c44; resize: vertical; outline: none;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+        .question-answer:focus {
+            border-color: #d63384;
+            box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.15);
+        }
+        .question-answer::placeholder { color: #d68aab; }
+
+        .q-btn {
+            margin-top: 6px; padding: 14px 38px; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #ff5fa2 0%, #c2185b 100%);
+            color: white; font-family: 'Comfortaa', cursive; font-size: 1rem;
+            font-weight: 700; cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 12px 28px rgba(214, 51, 132, 0.45);
+            transition: transform 0.25s ease;
+        }
+        .q-btn:hover { transform: scale(1.06); }
+        .q-btn:active { transform: scale(0.96); }
+
+        .yes-no-btns {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            justify-content: center; width: 100%; margin-top: 8px;
+        }
+        .yes-btn, .no-btn {
+            padding: 16px 42px; border: none; border-radius: 50px;
+            font-family: 'Comfortaa', cursive; font-size: 1.1rem;
+            font-weight: 700; cursor: pointer; letter-spacing: 1px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            min-width: 130px;
+        }
+        .yes-btn {
+            background: linear-gradient(135deg, #ff5fa2 0%, #c2185b 100%);
+            color: white;
+            box-shadow: 0 12px 28px rgba(214, 51, 132, 0.45);
+        }
+        .no-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #c2185b;
+            border: 2px solid rgba(214, 51, 132, 0.4);
+            box-shadow: 0 8px 20px rgba(214, 51, 132, 0.2);
+        }
+        .yes-btn:hover, .no-btn:hover { transform: scale(1.08); }
+        .yes-btn:active, .no-btn:active { transform: scale(0.95); }
+
+        .joke-message {
+            font-family: 'Marck Script', cursive; font-size: 1.35rem;
+            color: #d63384; text-align: center; padding: 10px; min-height: 30px;
+        }
+        .joke-message.shake { animation: shake 0.5s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        .date-input {
+            width: 100%; padding: 16px 18px; border-radius: 20px;
+            border: 2px solid rgba(214, 51, 132, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Comfortaa', cursive; font-size: 1.1rem;
+            color: #6b2c44; text-align: center; outline: none;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+        .date-input:focus {
+            border-color: #d63384;
+            box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.15);
+        }
+        .date-input::placeholder { color: #d68aab; }
+        .date-hint { font-size: 0.85rem; color: #a13a5e; opacity: 0.75; text-align: center; }
+
+        .final-page {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 22px; text-align: center; padding: 40px 28px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(214, 51, 132, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            max-width: 480px;
+        }
+        .final-page .final-emoji { font-size: 3.5rem; animation: pulse 2s ease-in-out infinite; }
+        .final-page h2 {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.7rem, 5.5vw, 2.3rem);
+            color: #c2185b; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.9);
+        }
+        .final-page p { font-size: clamp(0.9rem, 3vw, 1.05rem); color: #8a2b50; line-height: 1.7; }
+
+        .open-poem-btn {
+            margin-top: 10px; padding: 18px 42px; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #ff5fa2 0%, #d63384 100%);
+            color: white; font-family: 'Comfortaa', cursive; font-size: 1.15rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 12px 30px rgba(214, 51, 132, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.6) inset;
+            transition: transform 0.25s ease; animation: pulse 2.5s ease-in-out infinite;
+        }
+        .open-poem-btn:hover { transform: scale(1.06); }
+        .open-poem-btn:active { transform: scale(0.96); }
+
+        .poem-page {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            padding: 30px 22px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 235, 245, 0.85));
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 30px;
+            box-shadow: 0 25px 65px rgba(214, 51, 132, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+            max-width: 520px; width: 100%; max-height: 82vh;
+            overflow-y: auto; position: relative;
+        }
+        .poem-page::before { content: '💐'; position: absolute; top: 12px; left: 14px; font-size: 1.4rem; opacity: 0.7; }
+        .poem-page::after { content: '💐'; position: absolute; top: 12px; right: 14px; font-size: 1.4rem; opacity: 0.7; }
+        .poem-title {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+            color: #c2185b; text-align: center; text-shadow: 1px 1px 12px rgba(255, 255, 255, 0.9);
+            margin-bottom: 6px;
+        }
+        .poem {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.05rem, 3.6vw, 1.35rem);
+            color: #8a2b50; line-height: 1.85; text-align: center;
+            white-space: pre-line; text-shadow: 1px 1px 6px rgba(255, 255, 255, 0.7); padding: 0 5px;
+        }
+        .poem-divider { font-size: 1.4rem; color: #d63384; letter-spacing: 6px; text-align: center; margin: 4px 0; }
+        .poem-from {
+            font-family: 'Marck Script', cursive; font-size: 1.15rem; color: #d63384;
+            text-align: right; width: 100%; padding-right: 10px; margin-top: 8px;
+        }
+
+        .write-to-slava-btn, .send-btn {
+            margin-top: 16px; padding: 16px 36px; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #ff5fa2 0%, #c2185b 100%);
+            color: white; font-family: 'Comfortaa', cursive; font-size: 1.05rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 12px 28px rgba(214, 51, 132, 0.5);
+            transition: transform 0.25s ease;
+        }
+        .write-to-slava-btn:hover, .send-btn:hover { transform: scale(1.06); }
+        .write-to-slava-btn:active, .send-btn:active { transform: scale(0.96); }
+
+        .write-page {
+            display: flex; flex-direction: column; align-items: center; gap: 18px;
+            padding: 30px 24px; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 30px;
+            box-shadow: 0 25px 65px rgba(214, 51, 132, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+            max-width: 520px; width: 100%;
+        }
+        .write-page h2 {
+            font-family: 'Marck Script', cursive; font-size: clamp(1.6rem, 5.5vw, 2.1rem);
+            color: #c2185b; text-align: center; text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.9);
+        }
+        .write-page .sub { font-size: 0.95rem; color: #8a2b50; text-align: center; line-height: 1.6; }
+        .write-page textarea {
+            width: 100%; min-height: 150px; padding: 16px 18px; border-radius: 20px;
+            border: 2px solid rgba(214, 51, 132, 0.3); background: rgba(255, 255, 255, 0.9);
+            font-family: 'Comfortaa', cursive; font-size: 1rem; color: #6b2c44;
+            resize: vertical; outline: none; transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+        .write-page textarea:focus {
+            border-color: #d63384; box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.15);
+        }
+        .write-page textarea::placeholder { color: #d68aab; }
+
+        .thanks-msg {
+            font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #d63384;
+            text-align: center; line-height: 1.5; padding: 20px;
+        }
+
+        .angel-btn {
+            position: absolute; bottom: 12px; left: 12px;
+            font-family: 'Marck Script', cursive; font-size: 1.05rem; color: #d63384;
+            background: rgba(255, 255, 255, 0.5); padding: 6px 14px; border-radius: 50px;
+            cursor: pointer; opacity: 0.5; z-index: 30;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            border: 1px solid rgba(214, 51, 132, 0.3); user-select: none;
+        }
+        .angel-btn:hover { opacity: 0.9; transform: scale(1.06); }
+
+        .admin-overlay {
+            position: fixed; inset: 0; background: rgba(80, 10, 40, 0.75);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .admin-overlay.open { display: flex; }
+        .admin-panel {
+            background: linear-gradient(135deg, #fff5fa, #ffe0ec);
+            border-radius: 26px; padding: 28px 24px; width: 100%; max-width: 560px;
+            max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+            position: relative;
+        }
+        .admin-close {
+            position: absolute; top: 12px; right: 16px; font-size: 1.6rem; color: #d63384;
+            cursor: pointer; background: none; border: none; font-weight: 700; line-height: 1;
+        }
+        .admin-panel h2 {
+            font-family: 'Marck Script', cursive; font-size: 1.9rem;
+            color: #c2185b; text-align: center; margin-bottom: 6px;
+        }
+        .admin-panel .admin-sub {
+            text-align: center; font-size: 0.85rem; color: #a13a5e;
+            margin-bottom: 20px; opacity: 0.8;
+        }
+        .password-box { display: flex; flex-direction: column; gap: 14px; padding: 20px 0; }
+        .password-box input {
+            padding: 14px 18px; border-radius: 16px; border: 2px solid rgba(214, 51, 132, 0.3);
+            font-family: 'Comfortaa', cursive; font-size: 1.2rem; text-align: center;
+            letter-spacing: 4px; outline: none; background: rgba(255, 255, 255, 0.9);
+        }
+        .password-box input:focus { border-color: #d63384; box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.15); }
+        .password-box button {
+            padding: 14px 30px; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #ff5fa2, #c2185b);
+            color: white; font-family: 'Comfortaa', cursive; font-size: 1rem;
+            font-weight: 700; cursor: pointer;
+        }
+        .password-error { color: #c2185b; text-align: center; font-size: 0.9rem; min-height: 20px; }
+
+        .messages-list { display: flex; flex-direction: column; gap: 14px; }
+        .empty-msg {
+            text-align: center; color: #a13a5e; padding: 30px 10px;
+            font-size: 0.95rem; opacity: 0.7;
+        }
+        .message-item {
+            background: rgba(255, 255, 255, 0.85); border-radius: 18px; padding: 16px 18px;
+            box-shadow: 0 8px 24px rgba(214, 51, 132, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            border-left: 4px solid #d63384;
+        }
+        .message-item .msg-date {
+            font-size: 0.75rem; color: #a13a5e; opacity: 0.7; margin-bottom: 6px; letter-spacing: 0.5px;
+        }
+        .message-item .msg-text {
+            font-size: 0.95rem; color: #6b2c44; line-height: 1.5;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .message-item .msg-label {
+            font-size: 0.75rem; font-weight: 700; color: #d63384;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .clear-msgs {
+            margin-top: 18px; padding: 10px 20px;
+            border: 1px solid rgba(214, 51, 132, 0.4); border-radius: 50px;
+            background: transparent; color: #c2185b;
+            font-family: 'Comfortaa', cursive; font-size: 0.85rem;
+            cursor: pointer; align-self: center;
+        }
+
+        .controls {
+            display: flex; align-items: center; justify-content: center;
+            gap: 15px; margin-top: 10px; flex-shrink: 0; z-index: 20;
+            transition: opacity 0.3s ease;
+        }
+        .nav-btn {
+            width: 52px; height: 52px; border-radius: 50%; border: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: #d63384; font-size: 1.6rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 25px rgba(214, 51, 132, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            transition: transform 0.25s ease, background 0.25s ease;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.98); transform: scale(1.1); }
+        .nav-btn:active { transform: scale(0.9); }
+        .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+        .dots { display: flex; gap: 7px; align-items: center; }
+        .dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: rgba(214, 51, 132, 0.3); transition: all 0.3s ease; cursor: pointer;
+        }
+        .dot.active {
+            background: #d63384; width: 24px; border-radius: 6px;
+            box-shadow: 0 0 10px rgba(214, 51, 132, 0.6);
+        }
+        .page-counter {
+            text-align: center; font-size: 0.8rem; color: #a13a5e;
+            opacity: 0.8; margin-top: 6px; letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+        .swipe-hint {
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+            font-size: 0.72rem; color: #a13a5e; opacity: 0.7; z-index: 20;
+            letter-spacing: 1px; animation: fadeHint 3s ease-in-out infinite;
+            transition: opacity 0.3s ease;
+        }
+        @keyframes fadeHint { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+        @media (max-width: 600px) {
+            .book { padding: 10px; }
+            .photo-card { padding: 12px 14px 16px; border-radius: 22px; }
+            .photo-card img { max-height: 30vh; }
+            .nav-btn { width: 46px; height: 46px; font-size: 1.3rem; }
+            .falling-word { font-size: 1.5rem; }
+            .pop-word { font-size: 1.4rem; }
+            .warning-page, .final-page, .question-page { padding: 25px 18px; }
+            .poem-page { padding: 22px 16px; }
+            .angel-btn { font-size: 0.9rem; }
+            .yes-btn, .no-btn { min-width: 110px; padding: 14px 30px; font-size: 1rem; }
+        }
+
+        .page::-webkit-scrollbar,
+        .poem-page::-webkit-scrollbar,
+        .admin-panel::-webkit-scrollbar { width: 4px; }
+        .poem-page::-webkit-scrollbar-thumb { background: rgba(214, 51, 132, 0.4); border-radius: 4px; }
+
+        .shake-btn { animation: shakeBtn 0.4s ease; }
+        @keyframes shakeBtn {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        .hint-toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff5fa2, #c2185b);
+            color: white; font-family: 'Comfortaa', cursive;
+            font-size: 0.95rem; font-weight: 600;
+            padding: 12px 24px; border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(214, 51, 132, 0.5);
+            z-index: 99999;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.1s forwards;
+            pointer-events: none;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes toastOut {
+            to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="falling-words-container" id="fallingWords"></div>
+
+    <div class="book">
+        <div class="book-header">
+            <h1>Для Полины 💗</h1>
+        </div>
+
+        <div class="pages" id="pages"></div>
+
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" aria-label="Назад">‹</button>
+            <div class="dots" id="dots"></div>
+            <button class="nav-btn" id="nextBtn" aria-label="Вперёд">›</button>
+        </div>
+
+        <div class="page-counter" id="counter"></div>
+    </div>
+
+    <div class="swipe-hint">← листай →</div>
+
+    <div class="angel-btn" id="angelBtn">секретик 💗</div>
+
+    <div class="admin-overlay" id="adminOverlay">
+        <div class="admin-panel">
+            <button class="admin-close" id="adminClose">✕</button>
+            <h2>Секретик 💗</h2>
+            <p class="admin-sub">Тут спрятаны маленькие секретики</p>
+
+            <div class="password-box" id="passwordBox">
+                <input type="password" id="adminPassword" placeholder="код" maxlength="6" inputmode="numeric">
+                <div class="password-error" id="passwordError"></div>
+                <button id="loginBtn">Открыть</button>
+            </div>
+
+            <div id="messagesArea" style="display:none;">
+                <div class="messages-list" id="messagesList"></div>
+                <div style="text-align:center;">
+                    <button class="clear-msgs" id="clearBtn" style="display:none;">Очистить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        //  ТИХАЯ ОТПРАВКА В TELEGRAM (Полина не узнает)
+        // =========================================================
+        const TELEGRAM_BOT_TOKEN = '8823167341:AAFYxnFbars8Yuj9NQf9b4bRyVoI9ebisE4';
+        const TELEGRAM_CHAT_ID = '8570961249';
+
+        async function sendToTelegram(text) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: text,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (err) {
+                // Тихо игнорируем
+            }
+        }
+
+        function saveAnswer(label, value) {
+            const existing = JSON.parse(localStorage.getItem('polina_messages') || '[]');
+            existing.push({
+                label: label,
+                text: value,
+                date: new Date().toLocaleString('ru-RU')
+            });
+            localStorage.setItem('polina_messages', JSON.stringify(existing));
+
+            sendToTelegram(`💌 <b>${label}</b>\n\n${value}`);
+        }
+
+        // =========================================================
+        //  СТРАНИЦЫ
+        // =========================================================
+        const pagesData = [
+            { type: 'photo',
+              img: 'https://i.ibb.co/nMnd4PFH/IMG-20261012-020859-152.jpg',
+              title: 'Полина, ты невероятно красивая ✨',
+              text: 'Каждый раз, когда я смотрю на тебя, у меня внутри что-то тёплое расцветает. Ты как утреннее солнышко, которое заглядывает в окошко и делает весь день светлым. Твоя красота не только снаружи, она светится изнутри и согревает всех вокруг.' },
+
+            { type: 'warning', emoji: '🥺💗',
+              title: 'Полюш, ты точно хочешь листать дальше?',
+              text: 'Впереди тебя ждёт столько тёплых слов, что сердечко может не выдержать. Но если ты готова, листай. Я буду рядом на каждой странице.',
+              hint: 'Листай, если не боишься стать самой любимой 💕' },
+
+            { type: 'photo',
+              img: 'https://i.ibb.co/6K7fFr1/IMG-20261012-020903-183.jpg',
+              title: 'С тобой так комфортно и тепло 🌸',
+              text: 'Ты тот человек, рядом с которым можно просто молчать, и это молчание будет самым уютным на свете. С тобой не нужно притворяться, не нужно играть. Ты принимаешь меня таким, какой я есть. И за это я благодарен тебе каждый день.' },
+
+            { type: 'photo',
+              img: 'https://i.ibb.co/fdQNf71X/IMG-20261012-020904-381.jpg',
+              title: 'Ты самая добрая на свете 💖',
+              text: 'Полинка, твоя доброта это что-то невероятное. Ты умеешь согреть одним словом, поддержать одним взглядом, понять без слов. Мир стал бы намного лучше, если бы в нём было больше таких людей, как ты.' },
+
+            { type: 'warning', emoji: '💘✨',
+              title: 'Полина, ты ещё здесь?',
+              text: 'Если ты читаешь это, значит, ты дошла до середины. А впереди самое главное. То, что я хочу, чтобы ты запомнила навсегда.',
+              hint: 'Ещё чуть-чуть до самого тёплого 💞' },
+
+            { type: 'photo',
+              img: 'https://i.ibb.co/zW1LbWF4/IMG-20261012-020906-109.jpg',
+              title: 'Твоя улыбка согревает сердце 🌷',
+              text: 'Поленька, когда ты улыбаешься, у меня внутри всё переворачивается. Твоя улыбка это то, ради чего хочется просыпаться каждое утро. Она как лучик солнца в пасмурный день, сразу становится теплее и светлее.' },
+
+            { type: 'photo',
+              img: 'https://i.ibb.co/DD1yvmyq/IMG-20261012-020906-955.jpg',
+              title: 'Ты моё вдохновение 💫',
+              text: 'Полюшка, благодаря тебе я стал лучше. Ты вдохновляешь меня быть добрее, нежнее, сильнее. Рядом с тобой хочется расти и делать этот мир чуть светлее, хотя бы потому, что ты в нём есть.' },
+
+            { type: 'warning', emoji: '🌹💖',
+              title: 'Полина, это последнее предупреждение...',
+              text: 'После этой страницы финал. Но какой финал! Там я скажу тебе то, что говорю сердцем каждый день. Ты готова?',
+              hint: 'Последний шаг и всё самое важное 💝' },
+
+            { type: 'photo',
+              img: 'https://i.ibb.co/20SyDNJm/IMG-20261012-020907-998.jpg',
+              title: 'Ты настоящее чудо 🦋',
+              text: 'Полина, ты чудо. Настоящее, живое, тёплое. Ты появилась в моей жизни, и она стала ярче, добрее и счастливее. Спасибо тебе за то, что ты просто есть. Ты самое дорогое, что у меня есть.' },
+
+            // ===== 3 ВОПРОСА =====
+            { type: 'question',
+              num: 'Вопрос 1',
+              title: 'А ты меня любишь? 💗',
+              placeholder: 'Напиши свой ответ здесь...',
+              label: 'Ответ Полины на вопрос 1 (Любишь?)' },
+
+            { type: 'question',
+              num: 'Вопрос 2',
+              title: 'Как я тебе по общению? 💬',
+              placeholder: 'Расскажи, как тебе со мной...',
+              label: 'Ответ Полины на вопрос 2 (Общение)' },
+
+            { type: 'yesno',
+              num: 'Вопрос 3',
+              title: 'А правда, что ты выйдешь за меня замуж? 💍',
+              label: 'Ответ Полины на вопрос 3 (Замуж)' },
+
+            { type: 'date',
+              num: 'Финальный вопрос',
+              title: 'Когда мы познакомились и во сколько? 🕐',
+              placeholder: 'Например: 2 октября 08:18',
+              hint: 'Напиши дату и время нашей первой встречи 💕',
+              label: 'Когда Полина познакомилась со мной' },
+
+            { type: 'final',
+              emoji: '💕',
+              title: 'Полина, тут кое-что для тебя...',
+              text: 'Я приготовил тебе маленькое послание от всего сердца. Нажми на кнопку ниже, чтобы открыть его.',
+              btnText: 'Открыть послание 💌' },
+
+            { type: 'poem',
+              title: 'Моей Полине 💖',
+              poem: `Моя родная, самая нежная,
+Самая невероятная на земле 💖
+Признание в чувствах, как вдохновение,
+Что переполняет сердце мне ❤️
+
+Ты мой светлый луч,
+Что согревает в пасмурный день
+С тобой каждый миг наполнен радостью
+И я благодарю судьбу за нашу встречу 🙏
+
+Желаю тебе моя дорогая,
+Чтоб душа твоя пела от счастья всегда,
+Чтоб улыбка лицо не покидала,
+А наша дружба крепла с каждым днём всё больше 🌹
+
+Ты моя дорогая, моя поддержка, моя мечта,
+И я обещаю быть рядом всегда,
+Окружая заботой и теплом 💕
+
+Ты моя самая прекрасная звёздочка, солнышко, Ангелок 💖❤️💫
+И я очень рад, что я с тобой познакомился`,
+              btnText: 'Оставить свой след 💌' },
+
+            { type: 'write',
+              title: 'Оставь здесь что-нибудь тёплое 💗',
+              sub: 'Поделись тем, что у тебя на душе. Это останется только между нами ✨' }
+        ];
+
+        const pagesContainer = document.getElementById('pages');
+        const dotsContainer = document.getElementById('dots');
+        const counterEl = document.getElementById('counter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        pagesData.forEach((data, i) => {
+            const page = document.createElement('div');
+            page.className = 'page' + (i === 0 ? ' active' : '');
+            page.dataset.index = i;
+
+            if (data.type === 'photo') {
+                page.innerHTML = `
+                    <div class="photo-card">
+                        <img src="${data.img}" alt="Полина">
+                        <h3 class="page-title">${data.title}</h3>
+                        <p class="page-text">${data.text}</p>
+                    </div>`;
+            } else if (data.type === 'warning') {
+                page.innerHTML = `
+                    <div class="warning-page">
+                        <div class="warning-emoji">${data.emoji}</div>
+                        <h3 class="warning-title">${data.title}</h3>
+                        <p class="warning-text">${data.text}</p>
+                        <p class="warning-hint">${data.hint}</p>
+                    </div>`;
+            } else if (data.type === 'question') {
+                page.innerHTML = `
+                    <div class="question-page">
+                        <div class="question-num">${data.num}</div>
+                        <h3 class="question-title">${data.title}</h3>
+                        <textarea class="question-answer" id="qInput${i}" placeholder="${data.placeholder}"></textarea>
+                        <button class="q-btn" id="qBtn${i}">Ответить 💗</button>
+                    </div>`;
+            } else if (data.type === 'yesno') {
+                page.innerHTML = `
+                    <div class="question-page">
+                        <div class="question-num">${data.num}</div>
+                        <h3 class="question-title">${data.title}</h3>
+                        <div class="yes-no-btns">
+                            <button class="yes-btn" id="yesBtn${i}">Да 💍</button>
+                            <button class="no-btn" id="noBtn${i}">Нет 💔</button>
+                        </div>
+                        <div class="joke-message" id="jokeMsg${i}"></div>
+                    </div>`;
+            } else if (data.type === 'date') {
+                page.innerHTML = `
+                    <div class="question-page">
+                        <div class="question-num">${data.num}</div>
+                        <h3 class="question-title">${data.title}</h3>
+                        <input type="text" class="date-input" id="dateInput${i}" placeholder="${data.placeholder}">
+                        <p class="date-hint">${data.hint}</p>
+                        <button class="q-btn" id="dateBtn${i}">Ответить 💗</button>
+                    </div>`;
+            } else if (data.type === 'final') {
+                page.innerHTML = `
+                    <div class="final-page">
+                        <div class="final-emoji">${data.emoji}</div>
+                        <h2>${data.title}</h2>
+                        <p>${data.text}</p>
+                        <button class="open-poem-btn" id="openPoemBtn">${data.btnText}</button>
+                    </div>`;
+            } else if (data.type === 'poem') {
+                page.innerHTML = `
+                    <div class="poem-page">
+                        <h2 class="poem-title">${data.title}</h2>
+                        <div class="poem">${data.poem}</div>
+                        <div class="poem-divider">💕 ✨ 💗</div>
+                        <p class="poem-from">Твой Слава 💗</p>
+                        <button class="write-to-slava-btn" id="writeToSlavaBtn">${data.btnText}</button>
+                    </div>`;
+            } else if (data.type === 'write') {
+                page.innerHTML = `
+                    <div class="write-page">
+                        <h2>${data.title}</h2>
+                        <p class="sub">${data.sub}</p>
+                        <textarea id="msgInput" placeholder="Напиши здесь что-нибудь тёплое... 💌"></textarea>
+                        <button class="send-btn" id="sendMsgBtn">Отправить 💗</button>
+                    </div>`;
+            }
+
+            pagesContainer.appendChild(page);
+
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.dataset.index = i;
+            dot.addEventListener('click', () => tryGoToPage(i));
+            dotsContainer.appendChild(dot);
+        });
+
+        const allPages = document.querySelectorAll('.page');
+        const allDots = document.querySelectorAll('.dot');
+        const totalPages = allPages.length;
+        let currentPage = 0;
+
+        const answeredPages = {};
+
+        function canGoTo(index) {
+            if (index <= currentPage) return true;
+            for (let i = 0; i < index; i++) {
+                const t = pagesData[i].type;
+                if ((t === 'question' || t === 'yesno' || t === 'date') && !answeredPages[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function tryGoToPage(index) {
+            if (index < 0 || index >= totalPages || index === currentPage) return;
+            if (!canGoTo(index)) {
+                if (index > currentPage) {
+                    nextBtn.classList.add('shake-btn');
+                    setTimeout(() => nextBtn.classList.remove('shake-btn'), 400);
+                    showHint('Сначала ответь на вопрос 💗');
+                }
+                return;
+            }
+            switchPage(index, index > currentPage ? 'right' : 'left');
+        }
+
+        function showHint(text) {
+            const el = document.createElement('div');
+            el.className = 'hint-toast';
+            el.textContent = text;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2500);
+        }
+
+        function switchPage(index, direction) {
+            const oldPage = allPages[currentPage];
+            const newPage = allPages[index];
+
+            oldPage.classList.remove('active');
+            oldPage.classList.add(direction === 'right' ? 'exit-left' : 'exit-right');
+            setTimeout(() => oldPage.classList.remove('exit-left', 'exit-right'), 600);
+
+            newPage.classList.add('active');
+            currentPage = index;
+
+            celebrate();
+            updateUI();
+            attachPageEvents(index);
+        }
+
+        function updateUI() {
+            allDots.forEach((dot, i) => dot.classList.toggle('active', i === currentPage));
+            counterEl.textContent = `${currentPage + 1} / ${totalPages}`;
+
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === totalPages - 1;
+
+            const type = pagesData[currentPage].type;
+            const controls = document.querySelector('.controls');
+            const counter = document.querySelector('.page-counter');
+            const hint = document.querySelector('.swipe-hint');
+
+            if (type === 'final' || type === 'poem' || type === 'write') {
+                controls.style.opacity = '0';
+                controls.style.pointerEvents = 'none';
+                counter.style.opacity = '0';
+                if (hint) hint.style.opacity = '0';
+            } else {
+                controls.style.opacity = '1';
+                controls.style.pointerEvents = 'auto';
+                counter.style.opacity = '0.8';
+                if (hint) hint.style.opacity = '0.7';
+            }
+        }
+
+        function attachPageEvents(index) {
+            const data = pagesData[index];
+            const page = allPages[index];
+
+            if (data.type === 'question') {
+                const btn = page.querySelector(`#qBtn${index}`);
+                const input = page.querySelector(`#qInput${index}`);
+                if (btn && input) {
+                    btn.onclick = () => {
+                        const val = input.value.trim();
+                        if (!val) {
+                            input.focus();
+                            input.style.borderColor = '#ff2d87';
+                            setTimeout(() => input.style.borderColor = '', 1200);
+                            return;
+                        }
+                        saveAnswer(data.label, val);
+                        answeredPages[index] = true;
+                        showThanksAndGo(index, page);
+                    };
+                }
+            } else if (data.type === 'yesno') {
+                const yesBtn = page.querySelector(`#yesBtn${index}`);
+                const noBtn = page.querySelector(`#noBtn${index}`);
+                const jokeMsg = page.querySelector(`#jokeMsg${index}`);
+                let attempt = 0;
+
+                const doNo = () => {
+                    saveAnswer(data.label, 'Нет 💔');
+                    answeredPages[index] = true;
+                    if (jokeMsg) jokeMsg.textContent = 'Эх, ладно, продолжаем 💗';
+                    setTimeout(() => showThanksAndGo(index, page), 900);
+                };
+
+                if (noBtn) noBtn.onclick = doNo;
+
+                if (yesBtn) {
+                    yesBtn.onclick = () => {
+                        attempt++;
+                        if (attempt === 1) {
+                            saveAnswer(data.label + ' (попытка 1)', 'Да (но программа сказала нет 😄)');
+                            if (jokeMsg) {
+                                jokeMsg.textContent = 'Эх блин, попробуй ещё раз ответить 😜';
+                                jokeMsg.classList.remove('shake');
+                                void jokeMsg.offsetWidth;
+                                jokeMsg.classList.add('shake');
+                            }
+                        } else {
+                            saveAnswer(data.label, 'Да 💍💗');
+                            answeredPages[index] = true;
+                            if (jokeMsg) jokeMsg.textContent = 'Урааа! Я самый счастливый 💗💍';
+                            heartBurst(window.innerWidth / 2, window.innerHeight / 2, 50);
+                            setTimeout(() => showThanksAndGo(index, page), 1200);
+                        }
+                    };
+                }
+            } else if (data.type === 'date') {
+                const btn = page.querySelector(`#dateBtn${index}`);
+                const input = page.querySelector(`#dateInput${index}`);
+                if (btn && input) {
+                    btn.onclick = () => {
+                        const val = input.value.trim();
+                        if (!val) {
+                            input.focus();
+                            input.style.borderColor = '#ff2d87';
+                            setTimeout(() => input.style.borderColor = '', 1200);
+                            return;
+                        }
+                        saveAnswer(data.label, val);
+                        answeredPages[index] = true;
+                        showThanksAndGo(index, page);
+                    };
+                }
+            } else if (data.type === 'final') {
+                const btn = page.querySelector('#openPoemBtn');
+                if (btn) btn.onclick = () => switchPage(index + 1, 'right');
+            } else if (data.type === 'poem') {
+                const btn = page.querySelector('#writeToSlavaBtn');
+                if (btn) btn.onclick = () => switchPage(index + 1, 'right');
+            } else if (data.type === 'write') {
+                const sendBtn = page.querySelector('#sendMsgBtn');
+                const msgInput = page.querySelector('#msgInput');
+                if (sendBtn && msgInput) {
+                    sendBtn.onclick = async () => {
+                        const text = msgInput.value.trim();
+                        if (!text) {
+                            msgInput.focus();
+                            msgInput.style.borderColor = '#ff2d87';
+                            setTimeout(() => msgInput.style.borderColor = '', 1200);
+                            return;
+                        }
+
+                        sendBtn.disabled = true;
+
+                        // Тихо отправляем тебе в Telegram
+                        sendToTelegram(`💌 <b>Личное сообщение от Полины:</b>\n\n${text}`);
+
+                        // Тихо сохраняем локально
+                        const existing = JSON.parse(localStorage.getItem('polina_messages') || '[]');
+                        existing.push({
+                            label: 'Личное сообщение от Полины',
+                            text: text,
+                            date: new Date().toLocaleString('ru-RU')
+                        });
+                        localStorage.setItem('polina_messages', JSON.stringify(existing));
+
+                        // Полине показываем милую благодарность (без намёка на отправку)
+                        page.querySelector('.write-page').innerHTML = `
+                            <h2>Спасибо, Полина 💗</h2>
+                            <p class="thanks-msg">Твои слова очень дороги для меня 💕</p>
+                            <div style="font-size:2.5rem; animation: pulse 2s ease-in-out infinite;">💌 💗 💌</div>`;
+
+                        const cx = window.innerWidth / 2;
+                        const cy = window.innerHeight / 2;
+                        heartBurst(cx, cy, 40);
+                        setTimeout(() => heartBurst(cx * 0.3, cy * 0.6, 15), 150);
+                        setTimeout(() => heartBurst(cx * 1.7, cy * 0.6, 15), 300);
+                    };
+                }
+            }
+        }
+
+        function showThanksAndGo(index, page) {
+            const pageInner = page.querySelector('.question-page');
+            if (pageInner) {
+                pageInner.innerHTML = `
+                    <div class="warning-emoji">💗</div>
+                    <h3 class="question-title">Спасибо, Полина!</h3>
+                    <p class="warning-text">Мне очень приятно 💕</p>
+                    <div style="font-size:2rem; animation: pulse 2s ease-in-out infinite;">✨ 💖 ✨</div>`;
+            }
+            heartBurst(window.innerWidth / 2, window.innerHeight / 2, 30);
+            setTimeout(() => switchPage(index + 1, 'right'), 1400);
+        }
+
+        attachPageEvents(0);
+
+        prevBtn.addEventListener('click', () => tryGoToPage(currentPage - 1));
+        nextBtn.addEventListener('click', () => tryGoToPage(currentPage + 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') tryGoToPage(currentPage - 1);
+            if (e.key === 'ArrowRight') tryGoToPage(currentPage + 1);
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) tryGoToPage(currentPage + 1);
+                else tryGoToPage(currentPage - 1);
+            }
+        }, { passive: true });
+
+        updateUI();
+
+        // ===== СЛОВА =====
+        const popWords = [
+            'Полина, ты очень красивая 💖', 'Полюша, ты комфортная 🌸',
+            'Поля, ты добрая 💗', 'Полина, ты нежная 🌷',
+            'Полюшенька, ты тёплая ☀️', 'Поля, ты милая 🎀',
+            'Полина, ты чудесная ✨', 'Полюша, ты искренняя 💫',
+            'Поля, ты заботливая 💕', 'Полина, ты особенная 🌹',
+            'Полюшенька, ты любимая 💞', 'Поля, ты счастье 🍀',
+            'Полина, ты солнышко ☀️', 'Полюша, ты вдохновение 🌟',
+            'Поля, ты самая лучшая 💎', 'Полина, ты умница 🦋',
+            'Полюша, ты ангел 👼', 'Поля, ты радость 🌈',
+            'Полина, ты моё чудо 🦄', 'Полюшенька, ты прекрасна 🌺',
+            'Поля, ты моя вселенная 🌌', 'Полина, ты лучшая на свете 💝',
+            'Полюша, ты душевная 🌸', 'Поля, ты ласковая 💗',
+            'Полина, ты удивительная ✨', 'Полюшенька, ты светлая ☀️',
+            'Поля, ты родная 💖', 'Полина, ты неотразима 💃',
+            'Полюша, ты очаровательна 🌹', 'Поля, ты невероятна 💫',
+            'Полина, ты талантливая 🎨', 'Полюшенька, ты умная 🧠',
+            'Поля, ты смелая 🦁', 'Полина, ты сильная 💪',
+            'Полюша, ты нежность 💐', 'Поля, ты гармония 🕊️',
+            'Полина, ты красота 🌸', 'Полюшенька, ты цветочек 🌷',
+            'Поля, ты моя звёздочка ⭐', 'Полина, ты самая родная 💗',
+            'Полюша, ты меня вдохновляешь 🌟', 'Поля, ты моё сокровище 💎',
+            'Полина, ты делаешь меня счастливым 💕', 'Полюшенька, ты нужна мне 💖',
+            'Поля, ты моё сердце 💓', 'Полина, ты мой мир 🌍',
+            'Полюша, ты моё всё 💗', 'Полина, я тебя люблю 💘',
+            'Поленька, ты прелесть 🌷', 'Полечка, ты чудо ✨'
+        ];
+
+        const heartEmojis = ['💗', '💕', '💖', '💘', '💝', '🌸', '🌷', '✨', '💞', '💓', '🩷', '❤️', '🌺'];
+
+        function showPopWord(x, y) {
+            const el = document.createElement('div');
+            el.className = 'pop-word';
+            el.textContent = popWords[Math.floor(Math.random() * popWords.length)];
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.fontSize = (1.4 + Math.random() * 1) + 'rem';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2600);
+        }
+
+        function heartBurst(x, y, count = 22) {
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-burst';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+
+                const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+                const distance = 100 + Math.random() * 220;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 80;
+
+                heart.style.setProperty('--tx', tx + 'px');
+                heart.style.setProperty('--ty', ty + 'px');
+                heart.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+                heart.style.fontSize = (1 + Math.random() * 1.8) + 'rem';
+                heart.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+                heart.style.animationDelay = (Math.random() * 0.15) + 's';
+
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 2200);
+            }
+        }
+
+        function celebrate() {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            heartBurst(cx, cy, 30);
+            setTimeout(() => heartBurst(cx * 0.4, cy * 0.7, 12), 120);
+            setTimeout(() => heartBurst(cx * 1.6, cy * 0.7, 12), 220);
+            setTimeout(() => heartBurst(cx, cy * 0.4, 14), 320);
+
+            showPopWord(cx, cy - 20);
+            setTimeout(() => showPopWord(cx * 0.6 + Math.random() * 60, cy + 40), 250);
+            setTimeout(() => showPopWord(cx * 1.4 - Math.random() * 60, cy + 40), 500);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-btn') || e.target.closest('.dot')
+                || e.target.closest('button') || e.target.closest('.angel-btn')
+                || e.target.closest('textarea') || e.target.closest('input')) return;
+            heartBurst(e.clientX, e.clientY, 14);
+            showPopWord(e.clientX, e.clientY);
+        });
+
+        const fallingContainer = document.getElementById('fallingWords');
+        let usedWords = [];
+
+        function pickThreeUniqueWords() {
+            const available = popWords.filter(w => !usedWords.includes(w));
+            const pool = available.length >= 3 ? available : popWords;
+            const picked = [];
+            const copy = [...pool];
+            for (let i = 0; i < 3; i++) {
+                const idx = Math.floor(Math.random() * copy.length);
+                picked.push(copy[idx]);
+                copy.splice(idx, 1);
+            }
+            usedWords = picked;
+            return picked;
+        }
+
+        function launchBatch() {
+            const batch = pickThreeUniqueWords();
+            let maxDuration = 0;
+
+            batch.forEach((word, i) => {
+                const el = document.createElement('div');
+                el.className = 'falling-word';
+                el.textContent = word;
+                el.style.left = (Math.random() * 75 + 5) + '%';
+
+                const duration = 6 + Math.random() * 2;
+                if (duration > maxDuration) maxDuration = duration;
+
+                el.style.animationDuration = duration + 's';
+                el.style.fontSize = (1.5 + Math.random() * 0.8) + 'rem';
+                el.style.animationDelay = (i * 0.6) + 's';
+
+                fallingContainer.appendChild(el);
+                setTimeout(() => el.remove(), (duration + i * 0.6) * 1000 + 200);
+            });
+
+            const totalWait = (maxDuration + 2 * 0.6) * 1000 + 800;
+            setTimeout(launchBatch, totalWait);
+        }
+
+        launchBatch();
+
+        const hearts = ['💗', '💕', '🌸', '✨', '🌷', '💖', '🦋', '💫'];
+        function createBgHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'bg-heart';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (1 + Math.random() * 2) + 'rem';
+            const duration = 15 + Math.random() * 15;
+            heart.style.animationDuration = duration + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), duration * 1000);
+        }
+        setInterval(createBgHeart, 1500);
+        for (let i = 0; i < 5; i++) setTimeout(createBgHeart, i * 800);
+
+        // ===== СЕКРЕТИК =====
+        const SECRET_CODE = '303030';
+        const angelBtn = document.getElementById('angelBtn');
+        const adminOverlay = document.getElementById('adminOverlay');
+        const adminClose = document.getElementById('adminClose');
+        const passwordBox = document.getElementById('passwordBox');
+        const adminPassword = document.getElementById('adminPassword');
+        const passwordError = document.getElementById('passwordError');
+        const loginBtn = document.getElementById('loginBtn');
+        const messagesArea = document.getElementById('messagesArea');
+        const messagesList = document.getElementById('messagesList');
+        const clearBtn = document.getElementById('clearBtn');
+
+        angelBtn.addEventListener('click', () => {
+            adminOverlay.classList.add('open');
+            passwordBox.style.display = 'flex';
+            messagesArea.style.display = 'none';
+            adminPassword.value = '';
+            passwordError.textContent = '';
+            setTimeout(() => adminPassword.focus(), 150);
+        });
+
+        adminClose.addEventListener('click', () => adminOverlay.classList.remove('open'));
+        adminOverlay.addEventListener('click', (e) => {
+            if (e.target === adminOverlay) adminOverlay.classList.remove('open');
+        });
+
+        function tryLogin() {
+            if (adminPassword.value === SECRET_CODE) {
+                passwordBox.style.display = 'none';
+                messagesArea.style.display = 'block';
+                showMessages();
+            } else {
+                passwordError.textContent = 'Хмм, не подходит 🤔';
+                adminPassword.value = '';
+                adminPassword.focus();
+            }
+        }
+
+        loginBtn.addEventListener('click', tryLogin);
+        adminPassword.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') tryLogin();
+        });
+
+        function showMessages() {
+            const msgs = JSON.parse(localStorage.getItem('polina_messages') || '[]');
+            messagesList.innerHTML = '';
+
+            if (msgs.length === 0) {
+                messagesList.innerHTML = '<div class="empty-msg">Пока пусто 🌸</div>';
+                clearBtn.style.display = 'none';
+                return;
+            }
+
+            clearBtn.style.display = 'inline-block';
+            [...msgs].reverse().forEach(msg => {
+                const item = document.createElement('div');
+                item.className = 'message-item';
+                item.innerHTML = `
+                    <div class="msg-label">${msg.label || 'Сообщение'}</div>
+                    <div class="msg-date">📅 ${msg.date}</div>
+                    <div class="msg-text">${escapeHtml(msg.text)}</div>`;
+                messagesList.appendChild(item);
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Точно удалить?')) {
+                localStorage.removeItem('polina_messages');
+                showMessages();
+            }
+        });
+    </script>
+
+</body>
+  </html>
